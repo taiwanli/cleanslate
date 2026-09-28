@@ -1,0 +1,11 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <RootNamespace>CleanSlate.Uninstall</RootNamespace>
+    <AssemblyName>CleanSlate.Uninstall</AssemblyName>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\CleanSlate.Core\CleanSlate.Core.csproj" />
+    <ProjectReference Include="..\CleanSlate.Safety\CleanSlate.Safety.csproj" />
+  </ItemGroup>
+</Project>

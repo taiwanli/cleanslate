@@ -1,0 +1,24 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <EnableWindowsTargeting>true</EnableWindowsTargeting>
+    <IsPackable>false</IsPackable>
+    <RootNamespace>CleanSlate.IntegrationTests</RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" />
+    <PackageReference Include="xunit" />
+    <PackageReference Include="xunit.runner.visualstudio" />
+    <PackageReference Include="FluentAssertions" />
+    <PackageReference Include="Moq" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\CleanSlate.Inventory\CleanSlate.Inventory.csproj" />
+    <ProjectReference Include="..\..\src\CleanSlate.Safety\CleanSlate.Safety.csproj" />
+    <ProjectReference Include="..\..\src\CleanSlate.Leftover\CleanSlate.Leftover.csproj" />
+    <ProjectReference Include="..\..\src\CleanSlate.Uninstall\CleanSlate.Uninstall.csproj" />
+  </ItemGroup>
+</Project>
+
+
+

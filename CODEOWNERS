@@ -1,0 +1,9 @@
+# 代码所有权（示例，请按实际团队修改）
+
+# 以下 GitHub/GitLab 用户名或组名为占位符
+*                          @cleanslate/tl
+
+/src/CleanSlate.Safety/    @cleanslate/tl @cleanslate/sec
+/src/CleanSlate.ElevatedHelper/ @cleanslate/sec
+/docs/adr/                 @cleanslate/tl
+/docs/release-checklist.md @cleanslate/sec @cleanslate/devops

@@ -1,0 +1,390 @@
+﻿<Window x:Class="CleanSlate.App.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title=""
+        Height="740" Width="1180"
+        MinHeight="620" MinWidth="1000"
+        WindowStartupLocation="CenterScreen"
+        AllowDrop="True"
+        Drop="Window_Drop"
+        DragOver="Window_DragOver"
+        Background="{DynamicResource BgCanvasBrush}">
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="Themes/GlassNeu.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Window.Resources>
+
+    <Grid Margin="16">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="200" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+        <!-- Sidebar: 4 entries only -->
+        <Border Grid.Column="0" Style="{StaticResource GlassPanel}" Margin="0,0,12,0" VerticalAlignment="Stretch">
+            <DockPanel>
+                <StackPanel DockPanel.Dock="Top">
+                    <TextBlock Text="简卸" FontSize="24" FontWeight="Bold"
+                               Foreground="{StaticResource InkPrimaryBrush}" Margin="4,4,0,20" />
+                    <RadioButton x:Name="NavHome" Style="{StaticResource NavButton}" Content="软件清理" Checked="NavHome_Checked" />
+                    <RadioButton x:Name="NavDeep" Style="{StaticResource NavButton}"
+                                 Content="深度清理" Checked="NavDeep_Checked" />
+                    <RadioButton x:Name="NavTools" Style="{StaticResource NavButton}"
+                                 Content="工具箱" Checked="NavTools_Checked" />
+                    <RadioButton x:Name="NavSettings" Style="{StaticResource NavButton}"
+                                 Content="设置" Checked="NavSettings_Checked" />
+                </StackPanel>
+                <Border DockPanel.Dock="Bottom" Style="{StaticResource GlassPanel}" Padding="12" Margin="0,12,0,0">
+                    <TextBlock Style="{StaticResource CaptionText}" TextWrapping="Wrap"
+                               Text="默认清理至隔离区，可随时恢复。不删文档、桌面、下载。" />
+                </Border>
+            </DockPanel>
+        </Border>
+
+        <!-- Main -->
+        <Border Grid.Column="1" Style="{StaticResource GlassPanelStrong}" VerticalAlignment="Stretch">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <!-- HOME: software list -->
+                <Grid x:Name="PageHome" Grid.Row="0" Grid.RowSpan="2">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+
+                    <DockPanel Grid.Row="0" Margin="0,0,0,12">
+                        <TextBlock Text="软件清理" Style="{StaticResource TitleText}" VerticalAlignment="Center" />
+                        <Button x:Name="BtnBatch" DockPanel.Dock="Right" Content="批量卸载"
+                                Style="{StaticResource NeuButtonDanger}" Click="BtnBatch_Click" />
+                        <Button x:Name="BtnRefresh" DockPanel.Dock="Right" Content="刷新"
+                                Style="{StaticResource NeuButton}" Margin="0,0,8,0" Click="BtnRefresh_Click" />
+                        <Button x:Name="BtnScan" DockPanel.Dock="Right" Content="扫描选中残留"
+                                Style="{StaticResource NeuButtonPrimary}" Margin="0,0,8,0" Click="BtnScan_Click" />
+                    </DockPanel>
+
+                                        <StackPanel Grid.Row="1" Margin="0,0,0,12">
+                        <TextBox x:Name="SearchBox" Style="{StaticResource NeuTextBox}"
+                                 TextChanged="SearchBox_TextChanged" ToolTip="按名称或发布者筛选" />
+                        <Border Style="{StaticResource SoftwareRow}" Margin="0,10,0,0" Padding="16">
+                            <DockPanel>
+                                <StackPanel DockPanel.Dock="Left" Orientation="Horizontal">
+                                    <Button x:Name="BtnHealth" Content="立即体检" Style="{StaticResource NeuButtonPrimary}" Click="BtnHealth_Click" />
+                                    <Button x:Name="BtnHealthClean" Content="一键清理推荐项" Style="{StaticResource NeuButton}" Margin="8,0,0,0" Click="BtnHealthClean_Click" />
+                                </StackPanel>
+                                <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" Margin="16,0,0,0">
+                                    <TextBlock x:Name="HealthSoft" Text="—" Style="{StaticResource CaptionText}" Margin="0,0,12,0" />
+                                    <TextBlock x:Name="HealthAgent" Text="—" Style="{StaticResource CaptionText}" Margin="0,0,12,0" />
+                                    <TextBlock x:Name="HealthSafe" Text="—" Style="{StaticResource CaptionText}" />
+                                </StackPanel>
+                                <TextBlock x:Name="HealthSummaryText" Style="{StaticResource BodyText}"
+                                           VerticalAlignment="Center" Text="点击「立即体检」检查可清理项" />
+                            </DockPanel>
+                        </Border>
+                    </StackPanel>
+
+                    <Grid Grid.Row="2">
+                        <ListBox x:Name="SoftwareList" ScrollViewer.VerticalScrollBarVisibility="Auto"
+                                 BorderThickness="0" Background="Transparent"
+                                 ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                                 VirtualizingStackPanel.IsVirtualizing="True"
+                                 VirtualizingStackPanel.VirtualizationMode="Recycling">
+                            <ListBox.ItemContainerStyle>
+                                <Style TargetType="ListBoxItem">
+                                    <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                                    <Setter Property="Padding" Value="0" />
+                                    <Setter Property="Margin" Value="0" />
+                                    <Setter Property="Template">
+                                        <Setter.Value>
+                                            <ControlTemplate TargetType="ListBoxItem">
+                                                <ContentPresenter />
+                                            </ControlTemplate>
+                                        </Setter.Value>
+                                    </Setter>
+                                </Style>
+                            </ListBox.ItemContainerStyle>
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <Border Style="{StaticResource SoftwareRow}">
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="Auto" />
+                                                <ColumnDefinition Width="Auto" />
+                                                <ColumnDefinition Width="*" />
+                                                <ColumnDefinition Width="Auto" />
+                                            </Grid.ColumnDefinitions>
+                                            <CheckBox Grid.Column="0" IsChecked="{Binding IsSelected}"
+                                                      VerticalAlignment="Center" Margin="0,0,12,0" />
+                                            <Image Grid.Column="1" Width="32" Height="32" Stretch="Uniform"
+                                                   Margin="0,0,12,0" Source="{Binding Icon}" VerticalAlignment="Center" />
+                                            <StackPanel Grid.Column="2">
+                                                <StackPanel Orientation="Horizontal">
+                                                    <TextBlock Text="{Binding DisplayName}" FontSize="15"
+                                                               FontWeight="SemiBold"
+                                                               Foreground="{StaticResource InkPrimaryBrush}" />
+                                                    <Border Style="{StaticResource RiskBadge}" Background="#D9F3E8"
+                                                            Margin="8,0,0,0">
+                                                        <TextBlock Text="{Binding RiskText}" FontSize="11" />
+                                                    </Border>
+                                                </StackPanel>
+                                                <TextBlock Style="{StaticResource CaptionText}" TextTrimming="CharacterEllipsis">
+                                                    <Run Text="{Binding Publisher}" /> · <Run Text="{Binding SizeText}" /> · <Run Text="{Binding SourceText}" />
+                                                </TextBlock>
+                                            </StackPanel>
+                                            <StackPanel Grid.Column="3" Orientation="Horizontal" VerticalAlignment="Center">
+                                                <Button Content="卸载" Style="{StaticResource NeuButton}"
+                                                        Margin="0,0,8,0" Click="BtnUninstall_Click" />
+                                                <Button Content="详情" Style="{StaticResource NeuButton}" Click="BtnDetail_Click" />
+                                            </StackPanel>
+                                        </Grid>
+                                    </Border>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
+                        <TextBlock x:Name="HomeEmpty" Visibility="Collapsed" Style="{StaticResource BodyText}"
+                                   HorizontalAlignment="Center" VerticalAlignment="Center"
+                                   Text="未找到软件" />
+                    </Grid>
+                </Grid>
+
+                                <!-- DEEP clean pipeline -->
+                <Grid x:Name="PageDeep" Visibility="Collapsed" Grid.Row="0" Grid.RowSpan="2">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+
+                    <!-- Stepper + actions -->
+                    <StackPanel Grid.Row="0">
+                        <DockPanel>
+                            <TextBlock Text="清理向导" Style="{StaticResource TitleText}" VerticalAlignment="Center" />
+                            <StackPanel Orientation="Horizontal" DockPanel.Dock="Right">
+                                <Button x:Name="BtnDeepOrphan" Content="历史孤儿" Style="{StaticResource NeuButton}" Click="BtnOrphans_Click" />
+                                <Button x:Name="BtnSelectRecommended" Content="仅选推荐项" Style="{StaticResource NeuButton}" Margin="8,0,0,0" Click="BtnSelectRecommended_Click" />
+                                <Button x:Name="BtnSelectAll" Content="全选" Style="{StaticResource NeuButton}" Margin="8,0,0,0" Click="BtnSelectAll_Click" />
+                                <Button x:Name="BtnDeepAgent" Content="Agent 缓存" Style="{StaticResource NeuButton}" Margin="8,0,0,0" Click="BtnDeepAgent_Click" />
+                            </StackPanel>
+                        </DockPanel>
+
+                        <!-- steps -->
+                        <Border Style="{StaticResource SoftwareRow}" Margin="0,8,0,8" Padding="12,10">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock x:Name="Step1" Text="① 扫描" FontWeight="SemiBold" Foreground="{StaticResource AccentBrush}" />
+                                <TextBlock Text="  →  " Foreground="{StaticResource InkSecondaryBrush}" />
+                                <TextBlock x:Name="Step2" Text="② 审阅" Foreground="{StaticResource InkSecondaryBrush}" />
+                                <TextBlock Text="  →  " Foreground="{StaticResource InkSecondaryBrush}" />
+                                <TextBlock x:Name="Step3" Text="③ 完成" Foreground="{StaticResource InkSecondaryBrush}" />
+                            </StackPanel>
+                        </Border>
+                    </StackPanel>
+
+                    <!-- Review list -->
+                    <Grid Grid.Row="1">
+                        <ScrollViewer x:Name="DeepScroll" ScrollViewer.VerticalScrollBarVisibility="Auto">
+                            <ItemsControl x:Name="ReviewList">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <Border Style="{StaticResource SoftwareRow}">
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="Auto" />
+                                                    <ColumnDefinition Width="*" />
+                                                </Grid.ColumnDefinitions>
+                                                <CheckBox IsChecked="{Binding IsSelected}" VerticalAlignment="Top"
+                                                          Margin="0,4,12,0" Checked="ReviewItem_Checked" Unchecked="ReviewItem_Checked" />
+                                                <StackPanel Grid.Column="1">
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <TextBlock Text="{Binding Kind}" FontWeight="SemiBold"
+                                                                   Foreground="{StaticResource InkPrimaryBrush}" />
+                                                        <Border Margin="8,0,0,0" CornerRadius="8" Padding="8,2" Background="#FFF0C9">
+                                                            <TextBlock Text="{Binding RiskText}" FontSize="11" />
+                                                        </Border>
+                                                    </StackPanel>
+                                                    <TextBlock Text="{Binding PathOrKey}" FontFamily="Consolas" FontSize="12"
+                                                               TextTrimming="CharacterEllipsis" />
+                                                    <TextBlock Style="{StaticResource CaptionText}">
+                                                        <Run Text="{Binding MatchReason}" /> · 置信度 <Run Text="{Binding Confidence}" />
+                                                    </TextBlock>
+                                                </StackPanel>
+                                            </Grid>
+                                        </Border>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </ScrollViewer>
+
+                        <!-- Complete page -->
+                        <Border x:Name="CompletePanel" Visibility="Collapsed" Style="{StaticResource GlassPanel}"
+                                VerticalAlignment="Center" HorizontalAlignment="Stretch" Margin="24">
+                            <StackPanel HorizontalAlignment="Center">
+                                <TextBlock x:Name="CompleteTitle" Text="清理完成" Style="{StaticResource TitleText}"
+                                           HorizontalAlignment="Center" />
+                                <TextBlock x:Name="CompleteDetail" Style="{StaticResource BodyText}"
+                                           HorizontalAlignment="Center" Margin="0,12,0,0"
+                                           TextWrapping="Wrap" TextAlignment="Center"
+                                           Text="已将选中项移入隔离区，14 天内可恢复。" />
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,20,0,0">
+                                    <Button Content="返回软件清理" Style="{StaticResource NeuButtonPrimary}" Click="BtnBackHome_Click" />
+                                    <Button Content="恢复隔离区" Style="{StaticResource NeuButton}" Margin="8,0,0,0" Click="BtnRestore_Click" />
+                                </StackPanel>
+                            </StackPanel>
+                        </Border>
+                    </Grid>
+
+                    <!-- Bottom confirm bar -->
+                    <Border x:Name="ConfirmBar" Grid.Row="2" Style="{StaticResource GlassPanel}" Padding="16,12"
+                            Margin="0,12,0,0" Background="#80D0E8FF">
+                        <DockPanel>
+                            <TextBlock x:Name="ConfirmSummary" Style="{StaticResource BodyText}"
+                                       VerticalAlignment="Center"
+                                       Text="勾选要清理的项，默认已选「推荐」项。" />
+                            <Button x:Name="BtnConfirmClean" DockPanel.Dock="Right" Content="确认清理到隔离区"
+                                    Style="{StaticResource NeuButtonPrimary}" Click="BtnClean_Click" />
+                            <TextBlock DockPanel.Dock="Right" Style="{StaticResource CaptionText}"
+                                       VerticalAlignment="Center" Margin="0,0,16,0"
+                                       Text="可随时恢复 · 不删文档桌面下载" />
+                        </DockPanel>
+                    </Border>
+                </Grid>
+<!-- TOOLS -->
+                <Grid x:Name="PageTools" Visibility="Collapsed" Grid.Row="0" Grid.RowSpan="2">
+                    <ScrollViewer ScrollViewer.VerticalScrollBarVisibility="Auto">
+                        <StackPanel>
+                            <TextBlock Text="工具箱" Style="{StaticResource TitleText}" />
+                            <TextBlock Style="{StaticResource BodyText}" Margin="0,4,0,16"
+                                       Text="进阶功能，适合排障与深度维护。" />
+
+                            <Border Style="{StaticResource SoftwareRow}">
+                                <StackPanel>
+                                    <TextBlock Text="强制卸载" FontSize="15" FontWeight="SemiBold"
+                                               Foreground="{StaticResource InkPrimaryBrush}" />
+                                    <TextBlock Style="{StaticResource CaptionText}" Margin="0,4,0,8"
+                                               Text="拖入文件夹/快捷方式，反查痕迹并清理。" />
+                                    <StackPanel Orientation="Horizontal">
+                                        <Button x:Name="BtnForcePlan" Content="对选中软件生成痕迹" Style="{StaticResource NeuButton}"
+                                                Click="BtnForcePlan_Click" />
+                                        <Button x:Name="BtnForceExecute" Content="执行清理" Style="{StaticResource NeuButtonDanger}"
+                                                Margin="8,0,0,0" Click="BtnForceExecute_Click" />
+                                    </StackPanel>
+                                </StackPanel>
+                            </Border>
+
+                            <Border Style="{StaticResource SoftwareRow}">
+                                <StackPanel>
+                                    <TextBlock Text="安装监控" FontSize="15" FontWeight="SemiBold"
+                                               Foreground="{StaticResource InkPrimaryBrush}" />
+                                    <TextBlock Style="{StaticResource CaptionText}" Margin="0,4,0,8"
+                                               Text="安装前/后快照对比，定位安装产生的文件。" />
+                                    <StackPanel Orientation="Horizontal">
+                                        <Button x:Name="BtnSnapBefore" Content="安装前快照" Style="{StaticResource NeuButton}" Click="BtnSnapBefore_Click" />
+                                        <Button x:Name="BtnSnapAfter" Content="安装后快照" Style="{StaticResource NeuButton}" Margin="8,0,0,0" Click="BtnSnapAfter_Click" />
+                                        <Button x:Name="BtnSnapDiff" Content="对比" Style="{StaticResource NeuButton}" Margin="8,0,0,0" Click="BtnSnapDiff_Click" />
+                                    </StackPanel>
+                                    <TextBlock x:Name="MonitorDetail" Style="{StaticResource CaptionText}" Margin="0,8,0,0" />
+                                </StackPanel>
+                            </Border>
+
+                            <Border Style="{StaticResource SoftwareRow}">
+                                <StackPanel>
+                                    <TextBlock Text="浏览器扩展" FontSize="15" FontWeight="SemiBold"
+                                               Foreground="{StaticResource InkPrimaryBrush}" />
+                                    <Button x:Name="BtnReloadExt" Content="扫描扩展" Style="{StaticResource NeuButton}"
+                                            HorizontalAlignment="Left" Margin="0,8,0,0" Click="BtnReloadExt_Click" />
+                                    <ItemsControl x:Name="ExtensionList" Margin="0,8,0,0">
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate>
+                                                <TextBlock Style="{StaticResource CaptionText}" Margin="0,2,0,0">
+                                                    <Run Text="{Binding Browser}" /> · <Run Text="{Binding Name}" />
+                                                </TextBlock>
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
+                                </StackPanel>
+                            </Border>
+
+                            <Border Style="{StaticResource SoftwareRow}">
+                                <StackPanel>
+                                    <TextBlock Text="软件搬迁" FontSize="15" FontWeight="SemiBold"
+                                               Foreground="{StaticResource InkPrimaryBrush}" />
+                                    <TextBox x:Name="RelocSrc" Style="{StaticResource NeuTextBox}" Margin="0,8,0,0" ToolTip="源目录" />
+                                    <TextBox x:Name="RelocDst" Style="{StaticResource NeuTextBox}" Margin="0,8,0,0" ToolTip="目标目录" />
+                                    <StackPanel Orientation="Horizontal" Margin="0,8,0,0">
+                                        <Button x:Name="BtnRelocate" Content="开始搬迁" Style="{StaticResource NeuButtonPrimary}" Click="BtnRelocate_Click" />
+                                        <Button x:Name="BtnRelocRollback" Content="回滚" Style="{StaticResource NeuButton}" Margin="8,0,0,0" Click="BtnRelocRollback_Click" />
+                                    </StackPanel>
+                                    <TextBlock x:Name="RelocDetail" Style="{StaticResource CaptionText}" Margin="0,8,0,0" />
+                                </StackPanel>
+                            </Border>
+                        </StackPanel>
+                    </ScrollViewer>
+                </Grid>
+
+                <!-- SETTINGS -->
+                <Grid x:Name="PageSettings" Visibility="Collapsed" Grid.Row="0" Grid.RowSpan="2">
+                    <ScrollViewer ScrollViewer.VerticalScrollBarVisibility="Auto">
+                        <StackPanel>
+                            <TextBlock Text="设置" Style="{StaticResource TitleText}" />
+                            <TextBlock Style="{StaticResource BodyText}" Margin="0,4,0,16"
+                                       Text="偏好与安全选项，不影响日常清理主路径。" />
+
+                            <Border Style="{StaticResource SoftwareRow}">
+                                <StackPanel>
+                                    <TextBlock Text="外观" FontWeight="SemiBold" Foreground="{StaticResource InkPrimaryBrush}" />
+                                    <StackPanel Orientation="Horizontal" Margin="0,8,0,0">
+                                        <TextBlock Text="语言" VerticalAlignment="Center" Margin="0,0,12,0" />
+                                        <ComboBox x:Name="LangBox" Width="120" SelectionChanged="LangBox_Changed">
+                                            <ComboBoxItem Content="中文" IsSelected="True" Tag="zh-CN" />
+                                            <ComboBoxItem Content="English" Tag="en-US" />
+                                        </ComboBox>
+                                        <CheckBox x:Name="DarkToggle" Content="深色主题" Margin="16,0,0,0"
+                                                  Checked="DarkToggle_Changed" Unchecked="DarkToggle_Changed" />
+                                    </StackPanel>
+                                </StackPanel>
+                            </Border>
+
+                            <Border Style="{StaticResource SoftwareRow}">
+                                <StackPanel>
+                                    <TextBlock Text="安全与恢复" FontWeight="SemiBold" Foreground="{StaticResource InkPrimaryBrush}" />
+                                    <TextBlock Style="{StaticResource CaptionText}" Margin="0,4,0,8"
+                                               Text="清理默认进入隔离区。注册表删除前自动备份。" />
+                                    <StackPanel Orientation="Horizontal">
+                                        <Button x:Name="BtnUndoLog" Content="查看撤销日志" Style="{StaticResource NeuButton}" Click="BtnUndoLog_Click" />
+                                        <Button x:Name="BtnRestore" Content="恢复隔离区" Style="{StaticResource NeuButtonPrimary}" Margin="8,0,0,0" Click="BtnRestore_Click" />
+                                        <Button x:Name="BtnExport" Content="导出报告" Style="{StaticResource NeuButton}" Margin="8,0,0,0" Click="BtnExport_Click" />
+                                    </StackPanel>
+                                    <TextBlock x:Name="SafetyDetail" Style="{StaticResource CaptionText}"
+                                               Margin="0,8,0,0" TextWrapping="Wrap" />
+                                </StackPanel>
+                            </Border>
+
+                            <Border Style="{StaticResource SoftwareRow}">
+                                <StackPanel>
+                                    <TextBlock Text="规则与更新" FontWeight="SemiBold" Foreground="{StaticResource InkPrimaryBrush}" />
+                                    <StackPanel Orientation="Horizontal" Margin="0,8,0,0">
+                                        <Button x:Name="BtnUpdateRules" Content="重载本地规则" Style="{StaticResource NeuButton}" Click="BtnUpdateRules_Click" />
+                                        <Button x:Name="BtnCdnUpdate" Content="从 CDN 更新规则" Style="{StaticResource NeuButton}" Margin="8,0,0,0" Click="BtnCdnUpdate_Click" />
+                                    </StackPanel>
+                                </StackPanel>
+                            </Border>
+                        </StackPanel>
+                    </ScrollViewer>
+                </Grid>
+
+                <!-- Footer status -->
+                <DockPanel Grid.Row="2" Margin="0,12,0,0">
+                    <TextBlock x:Name="StatusText" Text="就绪" Style="{StaticResource CaptionText}"
+                               VerticalAlignment="Center" />
+                </DockPanel>
+            </Grid>
+        </Border>
+    </Grid>
+</Window>

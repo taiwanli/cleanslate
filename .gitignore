@@ -1,0 +1,42 @@
+# Build
+bin/
+obj/
+out/
+publish/
+*.user
+*.suo
+.vs/
+.idea/
+*.DotSettings.user
+
+# NuGet
+*.nupkg
+packages/
+project.lock.json
+
+# Test / coverage
+TestResults/
+coverage/
+*.coverage
+*.coveragexml
+
+# Logs & local data
+*.log
+logs/
+AppData/
+
+# Secrets
+*.pfx
+*.snk
+*.p12
+*.key
+secrets.json
+appsettings.*.local.json
+
+# OS
+Thumbs.db
+Desktop.ini
+.DS_Store
+
+# Tools
+.playwright-cli/

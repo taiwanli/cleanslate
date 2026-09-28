@@ -1,0 +1,109 @@
+{
+  "schemaVersion": 1,
+  "rules": [
+    {
+      "agentId": "claude-code",
+      "displayName": "Claude Code",
+      "processNames": [
+        "claude.exe",
+        "claude"
+      ],
+      "pathPatterns": [
+        "%USERPROFILE%\\.claude",
+        "%APPDATA%\\Claude",
+        "%LOCALAPPDATA%\\AnthropicClaude"
+      ],
+      "layers": [
+        {
+          "name": "L1Cache",
+          "risk": "Low",
+          "defaultSelected": true,
+          "relativePath": "cache"
+        },
+        {
+          "name": "L2Session",
+          "risk": "Medium",
+          "defaultSelected": false,
+          "relativePath": "sessions"
+        },
+        {
+          "name": "L3Config",
+          "risk": "Medium",
+          "defaultSelected": false,
+          "relativePath": "config"
+        },
+        {
+          "name": "L4Credential",
+          "risk": "High",
+          "defaultSelected": false,
+          "relativePath": "credentials",
+          "notes": "Delete requires re-login"
+        }
+      ]
+    },
+    {
+      "agentId": "cursor",
+      "displayName": "Cursor",
+      "processNames": [
+        "Cursor.exe"
+      ],
+      "pathPatterns": [
+        "%APPDATA%\\Cursor",
+        "%USERPROFILE%\\.cursor"
+      ],
+      "layers": [
+        {
+          "name": "L1Cache",
+          "risk": "Low",
+          "defaultSelected": true,
+          "relativePath": "cache"
+        },
+        {
+          "name": "L2Session",
+          "risk": "Medium",
+          "defaultSelected": false,
+          "relativePath": "sessions"
+        },
+        {
+          "name": "L3Config",
+          "risk": "Medium",
+          "defaultSelected": false,
+          "relativePath": "config"
+        }
+      ]
+    },
+    {
+      "agentId": "github-copilot",
+      "displayName": "GitHub Copilot",
+      "processNames": [
+        "Code.exe",
+        "copilot"
+      ],
+      "pathPatterns": [
+        "%APPDATA%\\GitHub Copilot",
+        "%LOCALAPPDATA%\\GitHubCopilot"
+      ],
+      "layers": [
+        {
+          "name": "L1Cache",
+          "risk": "Low",
+          "defaultSelected": true,
+          "relativePath": "cache"
+        },
+        {
+          "name": "L3Config",
+          "risk": "Medium",
+          "defaultSelected": false,
+          "relativePath": "config"
+        },
+        {
+          "name": "L4Credential",
+          "risk": "High",
+          "defaultSelected": false,
+          "relativePath": "credentials",
+          "notes": "Delete requires re-login"
+        }
+      ]
+    }
+  ]
+}

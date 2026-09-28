@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <RootNamespace>CleanSlate.Cli</RootNamespace>
+    <!-- Must NOT be "cleanslate" / "CleanSlate" — Windows is case-insensitive and would overwrite the GUI host. -->
+    <AssemblyName>CleanSlate.Cli</AssemblyName>
+    <EnableWindowsTargeting>true</EnableWindowsTargeting>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\CleanSlate.Core\CleanSlate.Core.csproj" />
+    <ProjectReference Include="..\CleanSlate.Inventory\CleanSlate.Inventory.csproj" />
+    <ProjectReference Include="..\CleanSlate.Uninstall\CleanSlate.Uninstall.csproj" />
+    <ProjectReference Include="..\CleanSlate.Leftover\CleanSlate.Leftover.csproj" />
+    <ProjectReference Include="..\CleanSlate.AgentRules\CleanSlate.AgentRules.csproj" />
+    <ProjectReference Include="..\CleanSlate.Safety\CleanSlate.Safety.csproj" />
+  </ItemGroup>
+</Project>

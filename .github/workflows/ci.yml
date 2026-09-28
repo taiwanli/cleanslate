@@ -1,0 +1,46 @@
+name: CI
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+
+jobs:
+  build-test:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET 8
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "8.0.x"
+
+      - name: Ensure ProgramFiles env (NuGet path1 workaround)
+        shell: pwsh
+        run: |
+          [Environment]::SetEnvironmentVariable("ProgramFiles", "C:\Program Files", "Process")
+          [Environment]::SetEnvironmentVariable("ProgramFiles(x86)", "C:\Program Files (x86)", "Process")
+          [Environment]::SetEnvironmentVariable("ProgramW6432", "C:\Program Files", "Process")
+          Write-Host "ProgramFiles(x86)=$([Environment]::GetEnvironmentVariable('ProgramFiles(x86)'))"
+
+      - name: Restore
+        shell: pwsh
+        run: ./tools/dotnet-env.ps1 restore CleanSlate.sln
+
+      - name: Build
+        shell: pwsh
+        run: ./tools/dotnet-env.ps1 build CleanSlate.sln -c Release --no-restore
+
+      - name: Unit tests
+        shell: pwsh
+        run: ./tools/dotnet-env.ps1 test tests/CleanSlate.UnitTests/CleanSlate.UnitTests.csproj -c Release --no-build --logger "trx;LogFileName=unit.trx"
+
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results
+          path: "**/TestResults/**"
+          if-no-files-found: ignore

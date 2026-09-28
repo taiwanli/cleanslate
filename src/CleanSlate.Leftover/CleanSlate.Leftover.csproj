@@ -1,0 +1,14 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <RootNamespace>CleanSlate.Leftover</RootNamespace>
+    <AssemblyName>CleanSlate.Leftover</AssemblyName>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="System.ServiceProcess.ServiceController" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\CleanSlate.Core\CleanSlate.Core.csproj" />
+    <ProjectReference Include="..\CleanSlate.Safety\CleanSlate.Safety.csproj" />
+  </ItemGroup>
+</Project>
