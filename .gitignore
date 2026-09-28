@@ -40,3 +40,5 @@ Desktop.ini
 
 # Tools
 .playwright-cli/
+
+dist/
